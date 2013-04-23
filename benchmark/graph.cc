@@ -13,14 +13,31 @@ Graph::Graph()
 
 void Graph::Build(const std::string &filename)
 {
-    std::cout<<"Constructor with filename" << std::endl;
+    int num_vertexs, num_edges;
+    vertex_t x, y;
+    weight_t w;
+
+    std::ifstream ifs(filename.c_str());
+
+    if (!ifs) {
+        std::cerr << "Failed to open "<<filename << std::endl;
+        return;
+    }
+
+    ifs >> num_vertexs;
+
+    m_adjlist.clear();
+    m_adjlist.resize(num_vertexs);
+
+    while (ifs.good()) {
+        ifs >>x >>y >>w;
+        neighbor_t n1(y, w), n2(x, w);
+        m_adjlist[x].push_back(n1);
+        m_adjlist[y].push_back(n2);
+    }
 
 }
 
-Graph::~Graph()
-{
-    std::cout<<"Destructor" << std::endl;
-}
 
 bool Graph::Adjacent(const int x, const int y) const
 {
@@ -29,27 +46,6 @@ bool Graph::Adjacent(const int x, const int y) const
     return true;
 }
 
-void Graph::Build()
-{
-    std::ifstream ifs;
-    int num_nodes, x, y;
-    float w;
-    ifs.open("sample.graph");
-    if (ifs.is_open()){
-        ifs >> num_nodes;
-        m_adjlist.clear();
-        m_adjlist.resize(num_nodes);
-        while (ifs.good()) {
-            ifs>> x >> y >> w;
-            neighbor e1(y,w), e2(x,w);
-            m_adjlist[x].push_back(e1);
-
-            m_adjlist[y].push_back(e2);
-
-        }
-        ifs.close();
-    }
-}
 
 void Graph::DijkstraShortestPath(const vertex_t s,
                                  std::vector<weight_t> &dist,

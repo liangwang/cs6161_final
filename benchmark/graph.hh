@@ -20,14 +20,14 @@ enum HeapPolicy {
     NumHeaps
 };
 
-struct neighbor {
+typedef struct neighbor {
     vertex_t target;
     weight_t weight;
     neighbor(vertex_t arg_target, weight_t arg_weight)
         : target(arg_target), weight(arg_weight) { }
-};
+}neighbor_t;
 
-typedef std::vector<std::vector<neighbor> > adjacency_list_t;
+typedef std::vector<std::vector<neighbor_t> > adjacency_list_t;
 
 
 class Graph {
@@ -46,21 +46,21 @@ public:
     /*
      * Build a sample graph, just for test
      */
-    void Build();
+    inline void Build() {Build("sample.graph");};
 
-    void AddEdge(const int v1, const int v2, const float w);
+    void AddEdge(const vertex_t v1, const vertex_t v2, const weight_t w);
 
 
     /*
      * Get a list of all neighbors from a vertex
      */
-    const std::vector<int>& Neighbors(const int vertex) const;
+    const std::vector<neighbor_t>& Neighbors(const vertex_t v) const;
 
     /*
      * Test whether there is a edge between x and y
      *   not sure needed or not.
      */
-    bool Adjacent(const int x, const int y) const;
+    bool Adjacent(const vertex_t x, const vertex_t y) const;
 
     /*
      * Shortest path from a single source s, using Dijkstra algorithm
@@ -78,11 +78,12 @@ public:
 
     inline int VertexCounts() const { return m_adjlist.size();};
 
-    inline void SetHeapPolicy(HeapPolicy policy) {
+    inline void SetHeapPolicy(HeapPolicy policy)
+    {
         m_dijkstra_heap_policy = policy;
     }
 
-    virtual ~Graph();
+    virtual ~Graph() {};
 
 private:
     adjacency_list_t m_adjlist;
