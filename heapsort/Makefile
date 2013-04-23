@@ -1,7 +1,7 @@
 CC=gcc
 CPP=g++
-CFLAGS= -c -Wall
-CPPFLAGS= -c -Wall -I/if10/lw2aw/boost/include 
+CFLAGS= -Wall
+CPPFLAGS= -Wall -I/if10/lw2aw/boost/include 
 LDFLAGS= -static -L/if10/lw2aw/boost/lib
 LIBS= -lboost_graph
 SOURCES= heapsort.cpp main.cpp
@@ -15,7 +15,9 @@ $(TARGET): $(OBJECTS)
 	$(CPP) $(LDFLAGS) $(OBJECTS) -o $@ $(LIBS)
 
 %.o: %.cpp %.h
-	$(CPP) $(CPPFLAGS) $< -o $@
+	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 clean:
 	rm *.o $(TARGET)
+datagen:
+	$(CPP) $(CFLAGS) data_gen.c -o data_gen
