@@ -12,7 +12,7 @@ typedef float weight_t;
 const weight_t INF_WEIGHT = std::numeric_limits<weight_t>::infinity();
 const vertex_t VERTEX_UNDEFINED = -1;
 
-enum HeapPolicy {
+enum HeapType {
     Fibonacci,
     Binomial,
     Binary,
@@ -41,8 +41,9 @@ public:
     /*
      * Build graph from a given file
      */
+    void Build(const char *filename);
     void Build(const std::string &filename);
-
+    
     /*
      * Build a sample graph, just for test
      */
@@ -78,16 +79,17 @@ public:
 
     inline int VertexCounts() const { return m_adjlist.size();};
 
-    inline void SetHeapPolicy(HeapPolicy policy)
+    inline void SetHeapType(HeapType type)
     {
-        m_dijkstra_heap_policy = policy;
+        m_dijkstra_heap_type = type;
     }
 
     virtual ~Graph() {};
 
 private:
     adjacency_list_t m_adjlist;
-    HeapPolicy m_dijkstra_heap_policy;
+    HeapType m_dijkstra_heap_type;
+    int m_num_edges;
 
 private:
     void d_fib_heap(const vertex_t s,
