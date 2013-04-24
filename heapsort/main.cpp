@@ -34,7 +34,7 @@ int print_help()
 		"  -t HEAPTYPE, --heaptype=HEAPTYPE",
 		"\t heap type: 0, Fibonacci; 1, Binomial; 2, Binary; "
 		"3, PriorityQueue; 4, NumHeaps",
-		"  -v, --verbose",
+		"  -d, --debug",
 		"\t enable debug output.",
 	};
 
