@@ -21,8 +21,9 @@ iters = 3 #how many iters for one data set
 cases = ["rand", "same", "sorted", "rsorted"]
 #data_set_sizes = ["10", "100", "1K", "8K", "10K", "16K", "64K", "100K", 
 #                  "128K", "625K", "1M", "2M", "5M"]
-sets_per_size = 1 # how many data sets to run for each size
-data_set_sizes = ["10"]
+data_set_sizes = ["10M", "100M", "1B"]
+sets_per_size = 10 # how many data sets to run for each size
+#data_set_sizes = ["10"]
 heaps = {"fib":0, "bin":2} # names and indices of the heaps to test
 
 # data sets in random order
