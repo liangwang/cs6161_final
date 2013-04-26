@@ -16,10 +16,11 @@
 unsigned long long len;
 char * file_name;
 int debug;
+int one_number;
 
 int print_help()
 {
-	const char * help_strings[11] = {
+	const char * help_strings[13] = {
 		"Usage: heapsort [options]",
 		"",
 		"Options:",
@@ -28,14 +29,16 @@ int print_help()
 		"  -f FILENAME, --file=FILENAME",
 		"\t name of the output file",
 		"  -l LENGTH, --length=LENGTH",
-		"\t how name elements to generate "
+		"\t how name elements to generate ",
+		"  -s, --samenumber",
+		"\t generate LENGTH copies of one random number",
 		"  -v, --verbose",
 		"\t enable debug output.",
 	};
 
 	int i;
 
-	for(i = 0; i < 11; i++)
+	for(i = 0; i < 13; i++)
 		fprintf(stderr, "%s\n", help_strings[i]);
 
 	return 0;
@@ -53,7 +56,8 @@ int parse_parameters(int argc, char *argv[])
 		{"help", no_argument, NULL, 1001},
 		{"length", required_argument, NULL, 1002},
 		{"file", required_argument, NULL, 1003},
-		{"debug", no_argument, NULL, 1004}
+		{"debug", no_argument, NULL, 1004},
+		{"samenumber", no_argument, NULL, 1005}
 	};
 	
 	int op;
@@ -64,10 +68,11 @@ int parse_parameters(int argc, char *argv[])
 	file_name = NULL;
 	len = 0;
 	debug = 0;
+	one_number = 0;
 	
 	/* parse the commandline parameters */
 	while(1){
-		op = getopt_long(argc, argv, "hl:f:d", long_options, 
+		op = getopt_long(argc, argv, "hl:f:ds", long_options, 
 				 &long_op_index);
 
 		if(op == -1)
@@ -90,6 +95,10 @@ int parse_parameters(int argc, char *argv[])
 		case 1004:
 			debug = 1;
 			break;
+		case 's':
+		case 1005:
+			one_number = 1;
+			break;
 		default:
 			sprintf(error_msg, "%s", "Unknown options or missing "
 				"required value\n");
@@ -99,8 +108,9 @@ int parse_parameters(int argc, char *argv[])
 	}
 
 	if(debug)
-		printf("Input parameters: length %llu, file name %s\n",
-		       len, file_name);
+		printf("Input parameters: length %llu, file name %s,"
+		       "same number %d\n", 
+		       len, file_name, one_number);
 
 	/* check whether we have enough parameters */
 	if(file_name == NULL){
@@ -148,8 +158,10 @@ int main(int argc, char* argv[])
 	if(out_f == NULL)
 		err(2, "Unable to open output file %s", file_name);
 	fprintf(out_f, "%llu\n", len);
+	gen_one_number(&element);
 	for(i = 0; i < len; i++){
-		gen_one_number(&element);
+		if(!one_number)
+			gen_one_number(&element);
 		fprintf(out_f, "%llu\n", element);
 	}
 	fclose(out_f);

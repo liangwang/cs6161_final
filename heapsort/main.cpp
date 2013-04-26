@@ -152,6 +152,7 @@ int main(int argc, char* argv[])
 	char out_f_name[1024] = {0};
 	FILE *in_f, *out_f;
 	unsigned long long len = 10;
+    int ret;
 
 	/* parse command line parameters */
 	parse_parameters(argc, argv);
@@ -160,17 +161,18 @@ int main(int argc, char* argv[])
 	in_f = fopen(file_name, "r");
 	if(in_f == NULL)
 		err(2, "Unable to open input file %s", file_name);
-	fscanf(in_f, "%llu\n", &len);
+	ret = fscanf(in_f, "%llu\n", &len);
 	if(debug)
 		printf("There are %llu input data\n", len);
 
 	in_data = (DATA_TYPE*)malloc(sizeof(DATA_TYPE)*len);
 	out_data = (DATA_TYPE*)malloc(sizeof(DATA_TYPE)*len);
 	for(i = 0; i < len; i++)
-		fscanf(in_f, "%llu\n", in_data+i);
+		ret = fscanf(in_f, "%llu\n", in_data+i);
 	fclose(in_f);
 
 	/* sort the array */
+    
 	switch(heap_type){
 	case Fibonacci:
 		sorter = new heap_sorter(heap_type);
@@ -210,7 +212,7 @@ int main(int argc, char* argv[])
 		printf("Other heaps not implemented\n");
 		return 1;
 	}
-
+    
 	/* check the outputs */
 	for(i = 1; i < len; i++){
 		if(out_data[i]<out_data[i-1])

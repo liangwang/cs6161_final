@@ -1,8 +1,8 @@
 CC=gcc
 CPP=g++
-CFLAGS= -Wall
-CPPFLAGS= -Wall -I/if10/lw2aw/boost/include 
-LDFLAGS= -static -L/if10/lw2aw/boost/lib
+CFLAGS= -Wall -O3
+CPPFLAGS= -Wall -I/if10/lw2aw/boost/include -O3
+LDFLAGS= -static -L/if10/lw2aw/boost/lib -O3
 LIBS= -lboost_graph
 SOURCES= heapsort.cpp main.cpp
 OBJECTS= $(SOURCES:.cpp=.o)
