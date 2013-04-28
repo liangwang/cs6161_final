@@ -15,6 +15,8 @@
 #include <err.h>
 #include <sys/time.h>
 
+#include <pfm_libx.h>
+
 #include "heapsort.h"
 
 char * file_name;
@@ -152,7 +154,10 @@ int main(int argc, char* argv[])
 	char out_f_name[1024] = {0};
 	FILE *in_f, *out_f;
 	unsigned long long len = 10;
-    int ret;
+	int ret;
+
+	/* initialized performance counters */
+	ret = init_pfm_counters(NULL);
 
 	/* parse command line parameters */
 	parse_parameters(argc, argv);
@@ -171,47 +176,63 @@ int main(int argc, char* argv[])
 		ret = fscanf(in_f, "%llu\n", in_data+i);
 	fclose(in_f);
 
-	/* sort the array */
-    
+	/* sort the array */    
 	switch(heap_type){
 	case Fibonacci:
 		sorter = new heap_sorter(heap_type);
 
+		ret = start_pfm_counters();
 		get_start_time();
 		sorter->fib_heapify(in_data, len);
+		read_pfm_counters(NULL);
 		get_end_time();
 		get_elapsed_time();
 		printf("Heapify time %llu us, %f s\n", elapsed_time, 
 		       elapsed_time_sec);
-
+		output_pfm_counters();
+		
 		get_start_time();
 		sorter->fib_sort(out_data);
+		read_pfm_counters(NULL);
 		get_end_time();
 		get_elapsed_time();
 		printf("Sort time %llu us, %f s\n", elapsed_time, 
 		       elapsed_time_sec);
+		output_pfm_counters();
+
+		ret = stop_pfm_counters();
 		break;
 	case Binary:
 		sorter = new heap_sorter(heap_type);
-		
+		ret = start_pfm_counters();
+
 		get_start_time();
 		sorter->bin_heapify(in_data, len);
+		read_pfm_counters(NULL);
 		get_end_time();
 		get_elapsed_time();
 		printf("Heapify time %llu us, %f s\n", elapsed_time, 
 		       elapsed_time_sec);
+		output_pfm_counters();
 
 		get_start_time();
 		sorter->bin_sort(out_data);
+		read_pfm_counters(NULL);
 		get_end_time();
 		get_elapsed_time();
 		printf("Sort time %llu us, %f s\n", elapsed_time, 
 		       elapsed_time_sec);
+		output_pfm_counters();
+
+		ret = stop_pfm_counters();
 		break;
 	default:
 		printf("Other heaps not implemented\n");
 		return 1;
 	}
+
+	/* cleanup for performance counters */
+	pfm_cleanup();
     
 	/* check the outputs */
 	for(i = 1; i < len; i++){
